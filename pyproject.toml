@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wrapper"
+version = "0.1.11"
+description = "A unified Python wrapper for calling LLMs locally or via 3rd party providers"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Apache-2.0"}
+authors = [
+  {name = "Anubhav Girdhar", email = "anubhavgirdhar18@gmail.com"}
+]
+dependencies = [
+    "openai",
+    "python-dotenv",
+    "requests==2.32.5"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/anubhavgirdhar1/wrapper"
+"Repository" = "https://github.com/anubhavgirdhar1/wrapper"
+"LinkedIn" = "https://in.linkedin.com/in/anubhav-girdhar-b82a27225"
