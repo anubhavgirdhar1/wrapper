@@ -1,4 +1,4 @@
-![image_alt](https://github.com/anubhavgirdhar1/wrapper/blob/37d7654fcaef81b54677264096581fdce6f295bb/wrapper/src/logo.png)
+![image_alt](https://github.com/anubhavgirdhar1/wrapper/blob/8cd8cd4735cdf63030b513aeb5dd173cb866a56a/wrapper/src/banner.png)
 
 [![GitHub stars](https://img.shields.io/github/stars/anubhavgirdhar1/wrapper?style=social)](https://github.com/anubhavgirdhar1/wrapper/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/anubhavgirdhar1/wrapper?style=social)](https://github.com/anubhavgirdhar1/wrapper/network)
