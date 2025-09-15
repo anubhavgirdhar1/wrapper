@@ -67,16 +67,6 @@ class Wrapper:
         return self.impl.generate(**params)
 
     @staticmethod
-    def available_models_wrapper(provider: str, **kwargs):
-        provider = provider.lower()
-        if provider == "ollama":
-            instance = OllamaProvider(**kwargs)
-            models = instance.list_models()
-            return models
-        log.warning(f"No wrapper available for provider '{provider}'.")
-        return []
-
-    @staticmethod
     def available_models_api(provider: str, **kwargs):
         provider = provider.lower()
         if provider == "openai":
@@ -104,6 +94,8 @@ class Wrapper:
         
         elif provider == "ollama":
             instance = OllamaProvider(**kwargs)
-            log.info("\n Ollama currently supports a single default model.\n")
-            return ["default"]
+            models = instance.list_models()
+            return models
+        log.warning(f"No wrapper available for provider '{provider}'.")
+        
         return []
