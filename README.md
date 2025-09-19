@@ -12,8 +12,10 @@
 **Wrapper** is a unified Python library designed to interact with multiple Large Language Model (LLM) providers through a **single consistent interface**.
 It currently supports:
 
-* **OpenAI** (GPT-4, GPT-5, and more)
-* **Ollama** (Gemma, local models)
+* **OpenAI** (Text based GPT Models)
+* **Ollama** (Text based local models)
+* **Groq** (Production Models from Groq)
+
 
 The library handles:
 
@@ -86,6 +88,7 @@ print(response2)
 | -------- | -------------------------------------------------- | ----------------------------------------- |
 | OpenAI   | Text Based LLMs | Requires `OPENAI_API_KEY`        |                                           |
 | Ollama   | Gemma series (local models)                        | Local endpoint, optional `OLLAMA_API_KEY` |
+| Groq     | Text Based LLMs | Requires `Groq API Key`          | Only Prod. Approved Models are allowed    |
 
 ---
 
@@ -105,11 +108,10 @@ print(response)
 ### Listing Models
 
 ```python
-# OpenAI models
-openai_models = Wrapper.available_models_api("openai")
+# Just put provider name - for example Ollama
 
-# Ollama models
 ollama_models = Wrapper.available_models_wrapper("ollama")
+
 ```
 
 ---

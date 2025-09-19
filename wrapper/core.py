@@ -1,5 +1,6 @@
 from .providers.openai_provider import OpenAIProvider
 from .providers.ollama_provider import OllamaProvider
+from .providers.groq_provider import GroqProvider
 from collections import defaultdict
 from .utils import ColorLogger
 from .config import *
@@ -14,6 +15,8 @@ class Wrapper:
             self.impl = OpenAIProvider(**kwargs)
         elif provider == "ollama":
             self.impl = OllamaProvider(**kwargs)
+        elif provider == "groq":  
+            self.impl = GroqProvider(**kwargs)
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -69,6 +72,7 @@ class Wrapper:
     @staticmethod
     def available_models_api(provider: str, **kwargs):
         provider = provider.lower()
+
         if provider == "openai":
             instance = OpenAIProvider(**kwargs)
             models = instance.list_models()
@@ -96,6 +100,14 @@ class Wrapper:
             instance = OllamaProvider(**kwargs)
             models = instance.list_models()
             return models
-        log.warning(f"No wrapper available for provider '{provider}'.")
         
+        elif provider == "groq":  
+            instance = GroqProvider(**kwargs)
+            models = instance.list_models()
+            log.info("\n Groq Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"   {i:2d}. {m}")
+            return models
+        
+        log.warning(f"No wrapper available for provider '{provider}'.")
         return []
