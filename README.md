@@ -15,6 +15,7 @@ It currently supports:
 * **OpenAI** (Text based GPT Models)
 * **Ollama** (Text based local models)
 * **Groq** (Production Models from Groq)
+* **Bedrock** (Text Based Models from Anthropic, via Bedrock)
 
 
 The library handles:
@@ -84,12 +85,12 @@ print(response2)
 
 ## 🛠 Supported Providers
 
-| Provider | Models Supported                                   | Notes                                     |
-| -------- | -------------------------------------------------- | ----------------------------------------- |
-| OpenAI   | Text Based LLMs | Requires `OPENAI_API_KEY`        |                                           |
-| Ollama   | Gemma series (local models)                        | Local endpoint, optional `OLLAMA_API_KEY` |
-| Groq     | Text Based LLMs | Requires `Groq API Key`          | Only Prod. Approved Models are allowed    |
-
+| Provider | Models Supported                                   | Notes                                         |
+| -------- | -------------------------------------------------- | ----------------------------------------------|
+| OpenAI   | Text Based LLMs | Requires `OPENAI_API_KEY`        |                                               |
+| Ollama   | Gemma series (local models)                        | Local endpoint, optional `OLLAMA_API_KEY`     |
+| Groq     | Text Based LLMs | Requires `Groq API Key`          | Only Prod. Approved Models are allowed        |
+| Bedrock  | Text Based LLMs | Requires account creds.          | Only Text Based models | Preferably Anthropic |
 ---
 
 ## 📜 Advanced Usage
