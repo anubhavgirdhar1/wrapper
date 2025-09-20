@@ -1,6 +1,7 @@
 from .providers.openai_provider import OpenAIProvider
 from .providers.ollama_provider import OllamaProvider
 from .providers.groq_provider import GroqProvider
+from .providers.bedrock_provider import BedrockProvider
 from collections import defaultdict
 from .utils import ColorLogger
 from .config import *
@@ -17,6 +18,8 @@ class Wrapper:
             self.impl = OllamaProvider(**kwargs)
         elif provider == "groq":  
             self.impl = GroqProvider(**kwargs)
+        elif provider == "bedrock":
+            self.impl = BedrockProvider(**kwargs)
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -98,8 +101,7 @@ class Wrapper:
         
         elif provider == "ollama":
             instance = OllamaProvider(**kwargs)
-            models = instance.list_models()
-            return models
+            return instance.list_models()
         
         elif provider == "groq":  
             instance = GroqProvider(**kwargs)
@@ -107,6 +109,14 @@ class Wrapper:
             log.info("\n Groq Models:\n")
             for i, m in enumerate(models, 1):
                 log.info(f"   {i:2d}. {m}")
+            return models
+
+        elif provider == "bedrock":
+            instance = BedrockProvider(**kwargs)
+            models = instance.list_models() or []
+            log.info("\n Bedrock Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"   {i:2d}. {m['modelId']} — {m['modelName']} ({m['provider']})")
             return models
         
         log.warning(f"No wrapper available for provider '{provider}'.")

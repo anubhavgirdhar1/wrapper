@@ -19,8 +19,6 @@ class GroqProvider(BaseLLM):
         temperature: float = 0.7, 
         max_tokens: int = 200, 
         top_p: float = 0.1, 
-        frequency_penalty: int = 0, 
-        presence_penalty: int = 0, 
         stream: bool = False, 
         **kwargs
     ) -> str:
@@ -39,8 +37,6 @@ class GroqProvider(BaseLLM):
                 temperature=temperature,
                 max_tokens=max_tokens,
                 top_p=top_p,
-                frequency_penalty=frequency_penalty,
-                presence_penalty=presence_penalty,
                 **kwargs
             )
             return response.choices[0].message.content.strip()
@@ -52,8 +48,6 @@ class GroqProvider(BaseLLM):
                 temperature=temperature,
                 max_tokens=max_tokens,
                 top_p=top_p,
-                frequency_penalty=frequency_penalty,
-                presence_penalty=presence_penalty,
                 stream=True, 
                 **kwargs
             )
