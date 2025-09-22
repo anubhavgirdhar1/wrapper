@@ -1,3 +1,4 @@
+from .providers.anthropic_provider import AnthropicProvider
 from .providers.openai_provider import OpenAIProvider
 from .providers.ollama_provider import OllamaProvider
 from .providers.groq_provider import GroqProvider
@@ -12,7 +13,9 @@ class Wrapper:
     def __init__(self, provider: str, **kwargs):
         provider = provider.lower()
 
-        if provider == "openai":
+        if provider == "anthropic":
+            self.impl = AnthropicProvider(**kwargs)
+        elif provider == "openai":
             self.impl = OpenAIProvider(**kwargs)
         elif provider == "ollama":
             self.impl = OllamaProvider(**kwargs)
@@ -20,6 +23,7 @@ class Wrapper:
             self.impl = GroqProvider(**kwargs)
         elif provider == "bedrock":
             self.impl = BedrockProvider(**kwargs)
+
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -76,7 +80,15 @@ class Wrapper:
     def available_models_api(provider: str, **kwargs):
         provider = provider.lower()
 
-        if provider == "openai":
+        if provider == "anthropic":
+            instance = AnthropicProvider(**kwargs)
+            models = instance.list_models()
+            log.info("\n Anthropic Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f" {i:2d}. {m}")
+            return models
+        
+        elif provider == "openai":
             instance = OpenAIProvider(**kwargs)
             models = instance.list_models()
             groups = defaultdict(list)
