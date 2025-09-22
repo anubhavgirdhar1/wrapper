@@ -1,5 +1,6 @@
 from .providers.openai_provider import OpenAIProvider
 from .providers.ollama_provider import OllamaProvider
+from .providers.anthropic_provider import AnthropicProvider
 from collections import defaultdict
 from .utils import ColorLogger
 from .config import *
@@ -14,6 +15,8 @@ class Wrapper:
             self.impl = OpenAIProvider(**kwargs)
         elif provider == "ollama":
             self.impl = OllamaProvider(**kwargs)
+        elif provider == "anthropic":
+            self.impl = AnthropicProvider(**kwargs)
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -106,4 +109,13 @@ class Wrapper:
             instance = OllamaProvider(**kwargs)
             log.info("\n Ollama currently supports a single default model.\n")
             return ["default"]
+    
+        elif provider == "anthropic":
+            instance = AnthropicProvider(**kwargs)
+            models = instance.list_models()
+            log.info("\n Anthropic Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f" {i:2d}. {m}")
+            return models
+    
         return []
