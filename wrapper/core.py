@@ -3,6 +3,7 @@ from .providers.openai_provider import OpenAIProvider
 from .providers.ollama_provider import OllamaProvider
 from .providers.groq_provider import GroqProvider
 from .providers.bedrock_provider import BedrockProvider
+from .providers.mistral_provider import MistralProvider
 from collections import defaultdict
 from .utils import ColorLogger
 from .config import *
@@ -23,7 +24,8 @@ class Wrapper:
             self.impl = GroqProvider(**kwargs)
         elif provider == "bedrock":
             self.impl = BedrockProvider(**kwargs)
-
+        elif provider == "mistral":
+            self.impl = MistralProvider(**kwargs)
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -130,6 +132,12 @@ class Wrapper:
             for i, m in enumerate(models, 1):
                 log.info(f"   {i:2d}. {m['modelId']} — {m['modelName']} ({m['provider']})")
             return models
-        
+        elif provider == "mistral":
+            instance = MistralProvider(**kwargs)
+            models = instance.list_models().get("data", [])
+            log.info("\n Mistral Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"   {i:2d}. {m.get('id', m)}")
+            return models
         log.warning(f"No wrapper available for provider '{provider}'.")
         return []
