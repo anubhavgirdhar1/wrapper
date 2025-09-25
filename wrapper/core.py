@@ -1,12 +1,12 @@
-from .providers.anthropic_provider import AnthropicProvider
-from .providers.azure_provider import AzureProvider
-from .providers.openai_provider import OpenAIProvider
-from .providers.ollama_provider import OllamaProvider
-from .providers.groq_provider import GroqProvider
-from .providers.bedrock_provider import BedrockProvider
+from wrapper.providers.anthropic_provider import AnthropicProvider
+from wrapper.providers.azure_provider import AzureProvider
+from wrapper.providers.openai_provider import OpenAIProvider
+from wrapper.providers.ollama_provider import OllamaProvider
+from wrapper.providers.groq_provider import GroqProvider
+from wrapper.providers.bedrock_provider import BedrockProvider
 from collections import defaultdict
-from .utils import ColorLogger
-from .config import *
+from wrapper.utils import ColorLogger
+from wrapper.config import *
 
 log = ColorLogger(enable_debug=SHOW_LOGS)
 
