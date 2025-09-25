@@ -1,5 +1,9 @@
+from .providers.anthropic_provider import AnthropicProvider
+from .providers.azure_provider import AzureProvider
 from .providers.openai_provider import OpenAIProvider
 from .providers.ollama_provider import OllamaProvider
+from .providers.groq_provider import GroqProvider
+from .providers.bedrock_provider import BedrockProvider
 from collections import defaultdict
 from .utils import ColorLogger
 from .config import *
@@ -10,10 +14,19 @@ class Wrapper:
     def __init__(self, provider: str, **kwargs):
         provider = provider.lower()
 
-        if provider == "openai":
+        if provider == "anthropic":
+            self.impl = AnthropicProvider(**kwargs)
+        elif provider == "azure":
+            self.impl = AzureProvider(**kwargs)
+        elif provider == "openai":
             self.impl = OpenAIProvider(**kwargs)
         elif provider == "ollama":
             self.impl = OllamaProvider(**kwargs)
+        elif provider == "groq":  
+            self.impl = GroqProvider(**kwargs)
+        elif provider == "bedrock":
+            self.impl = BedrockProvider(**kwargs)
+
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -67,19 +80,22 @@ class Wrapper:
         return self.impl.generate(**params)
 
     @staticmethod
-    def available_models_wrapper(provider: str, **kwargs):
-        provider = provider.lower()
-        if provider == "ollama":
-            instance = OllamaProvider(**kwargs)
-            models = instance.list_models()
-            return models
-        log.warning(f"No wrapper available for provider '{provider}'.")
-        return []
-
-    @staticmethod
     def available_models_api(provider: str, **kwargs):
         provider = provider.lower()
-        if provider == "openai":
+
+        if provider == "anthropic":
+            instance = AnthropicProvider(**kwargs)
+            models = instance.list_models()
+            log.info("\n Anthropic Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f" {i:2d}. {m}")
+            return models
+
+        elif provider == "azure":
+            instance = AzureProvider(**kwargs)
+            return instance.list_models()
+
+        elif provider == "openai":
             instance = OpenAIProvider(**kwargs)
             models = instance.list_models()
             groups = defaultdict(list)
@@ -104,6 +120,23 @@ class Wrapper:
         
         elif provider == "ollama":
             instance = OllamaProvider(**kwargs)
-            log.info("\n Ollama currently supports a single default model.\n")
-            return ["default"]
+            return instance.list_models()
+        
+        elif provider == "groq":  
+            instance = GroqProvider(**kwargs)
+            models = instance.list_models()
+            log.info("\n Groq Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"   {i:2d}. {m}")
+            return models
+
+        elif provider == "bedrock":
+            instance = BedrockProvider(**kwargs)
+            models = instance.list_models() or []
+            log.info("\n Bedrock Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"   {i:2d}. {m['modelId']} — {m['modelName']} ({m['provider']})")
+            return models
+        
+        log.warning(f"No wrapper available for provider '{provider}'.")
         return []

@@ -1,3 +1,5 @@
+![image_alt](https://github.com/anubhavgirdhar1/wrapper/blob/8cd8cd4735cdf63030b513aeb5dd173cb866a56a/wrapper/src/banner.png)
+
 [![GitHub stars](https://img.shields.io/github/stars/anubhavgirdhar1/wrapper?style=social)](https://github.com/anubhavgirdhar1/wrapper/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/anubhavgirdhar1/wrapper?style=social)](https://github.com/anubhavgirdhar1/wrapper/network)
 [![PyPI version](https://img.shields.io/pypi/v/wrapper)](https://pypi.org/project/wrapper/)
@@ -10,8 +12,12 @@
 **Wrapper** is a unified Python library designed to interact with multiple Large Language Model (LLM) providers through a **single consistent interface**.
 It currently supports:
 
-* **OpenAI** (GPT-4, GPT-5, and more)
-* **Ollama** (Gemma, local models)
+* **OpenAI** (Text based GPT Models)
+* **Ollama** (Text based local models)
+* **Groq** (Production Models from Groq)
+* **Bedrock** (Text Based Models via Bedrock from Anthropic)
+* **Anthropic** (Text Based Models directly Anthropic)
+
 
 The library handles:
 
@@ -80,11 +86,12 @@ print(response2)
 
 ## 🛠 Supported Providers
 
-| Provider | Models Supported                                   | Notes                                     |
-| -------- | -------------------------------------------------- | ----------------------------------------- |
-| OpenAI   | Text Based LLMs | Requires `OPENAI_API_KEY`        |                                           |
-| Ollama   | Gemma series (local models)                        | Local endpoint, optional `OLLAMA_API_KEY` |
-
+| Provider | Models Supported                                   | Notes                                         |
+| -------- | -------------------------------------------------- | ----------------------------------------------|
+| OpenAI   | Text Based LLMs | Requires `OPENAI_API_KEY`        |                                               |
+| Ollama   | Gemma series (local models)                        | Local endpoint, optional `OLLAMA_API_KEY`     |
+| Groq     | Text Based LLMs | Requires `Groq API Key`          | Only Prod. Approved Models are allowed        |
+| Bedrock  | Text Based LLMs | Requires account creds.          | Only Text Based models | Preferably Anthropic |
 ---
 
 ## 📜 Advanced Usage
@@ -103,11 +110,10 @@ print(response)
 ### Listing Models
 
 ```python
-# OpenAI models
-openai_models = Wrapper.available_models_api("openai")
+# Just put provider name - for example Ollama
 
-# Ollama models
 ollama_models = Wrapper.available_models_wrapper("ollama")
+
 ```
 
 ---
