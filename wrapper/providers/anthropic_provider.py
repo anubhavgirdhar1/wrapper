@@ -2,9 +2,9 @@ import sys
 import re
 import requests
 from anthropic import Anthropic, AuthenticationError, APITimeoutError, APIError
-from ..base import BaseLLM
-from ..utils import get_or_request_key, ColorLogger
-from ..config import *
+from wrapper.base import BaseLLM
+from wrapper.utils import get_or_request_key, ColorLogger
+from wrapper.config import *
 
 log = ColorLogger(enable_debug=SHOW_LOGS)
 

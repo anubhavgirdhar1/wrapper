@@ -2,9 +2,9 @@ import json
 import sys
 import boto3
 from botocore.exceptions import ClientError
-from ..utils import ColorLogger
-from ..base import BaseLLM
-from ..utils import get_or_request_key
+from wrapper.utils import ColorLogger
+from wrapper.base import BaseLLM
+from wrapper.utils import get_or_request_key
 
 class BedrockProvider(BaseLLM):
     def __init__(self):

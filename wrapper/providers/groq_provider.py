@@ -1,8 +1,7 @@
 # TODO Add meaningful Logs using ColorLogger
 
-from ..utils import ColorLogger
-from ..base import BaseLLM
-from ..utils import get_or_request_key
+from wrapper.base import BaseLLM
+from wrapper.utils import get_or_request_key, ColorLogger
 from groq import Groq
 import sys
 
@@ -62,4 +61,3 @@ class GroqProvider(BaseLLM):
     def list_models(self):
         models = self.client.models.list()
         return [m.id for m in models.data]
-    
