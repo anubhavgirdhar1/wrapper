@@ -16,7 +16,8 @@ It currently supports:
 * **Ollama** (Text based local models)
 * **Groq** (Production Models from Groq)
 * **Bedrock** (Text Based Models via Bedrock from Anthropic)
-* **Anthropic** (Text Based Models directly Anthropic)
+* **Anthropic** (Text Based Models directly via Anthropic)
+* **Azure AI** (Text Based Models via Azure AI from OpenAI)
 
 
 The library handles:
