@@ -1,4 +1,5 @@
 from .providers.anthropic_provider import AnthropicProvider
+from .providers.azure_provider import AzureProvider
 from .providers.openai_provider import OpenAIProvider
 from .providers.ollama_provider import OllamaProvider
 from .providers.groq_provider import GroqProvider
@@ -15,6 +16,8 @@ class Wrapper:
 
         if provider == "anthropic":
             self.impl = AnthropicProvider(**kwargs)
+        elif provider == "azure":
+            self.impl = AzureProvider(**kwargs)
         elif provider == "openai":
             self.impl = OpenAIProvider(**kwargs)
         elif provider == "ollama":
@@ -87,7 +90,11 @@ class Wrapper:
             for i, m in enumerate(models, 1):
                 log.info(f" {i:2d}. {m}")
             return models
-        
+
+        elif provider == "azure":
+            instance = AzureProvider(**kwargs)
+            return instance.list_models()
+
         elif provider == "openai":
             instance = OpenAIProvider(**kwargs)
             models = instance.list_models()
