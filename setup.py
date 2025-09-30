@@ -11,10 +11,14 @@ setup(
     url="https://github.com/anubhavgirdhar1/wrapper",
     packages=find_packages(),
     include_package_data=True, 
-    dependencies = [
+    install_requires=[
         "openai",
         "python-dotenv",
-        "requests==2.32.5"
+        "requests==2.32.5",
+        "anthropic",
+        "boto3",
+        "botocore",
+        "groq-sdk"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
