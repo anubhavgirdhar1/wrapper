@@ -1,10 +1,13 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools>=42", "wheel", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "wrapper/_version.py"
 
 [project]
 name = "wrapper"
-version = "0.1.11"
+dynamic = ["version"]  
 description = "A unified Python wrapper for calling LLMs locally or via 3rd party providers"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -15,15 +18,23 @@ authors = [
 dependencies = [
     "openai",
     "python-dotenv",
-    "requests==2.32.5"
+    "requests==2.32.5",
+    "anthropic",
+    "boto3",
+    "botocore",
+    "groq-sdk"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/anubhavgirdhar1/wrapper"
-"Repository" = "https://github.com/anubhavgirdhar1/wrapper"
-"LinkedIn" = "https://in.linkedin.com/in/anubhav-girdhar-b82a27225"
+Homepage = "https://github.com/anubhavgirdhar1/wrapper"
+Repository = "https://github.com/anubhavgirdhar1/wrapper"
+Issues = "https://github.com/anubhavgirdhar1/wrapper/issues"
+LinkedIn = "https://in.linkedin.com/in/anubhav-girdhar-b82a27225"

@@ -9,4 +9,3 @@ response = anthropic_client.generate(
     user="Hello, how are you?",
     system="You are a helpful assistant."
 )
-print(response)

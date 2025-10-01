@@ -140,3 +140,13 @@ class Wrapper:
         
         log.warning(f"No wrapper available for provider '{provider}'.")
         return []
+
+class WrapperEmbed:
+    # TODO
+    def __init__(self, provider:str, **kwargs):
+        provider = provider.lower()
+        
+        if provider == "ollama":
+            self.impl = OllamaProvider(**kwargs)
+        else:
+            raise ValueError(f"Embedding provider {provider} not supported yet")
