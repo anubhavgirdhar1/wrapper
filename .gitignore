@@ -7,3 +7,4 @@ dist/
 build/
 *.egg-info/
 z.py
+*_version.py

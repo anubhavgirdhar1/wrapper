@@ -4,6 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
 write_to = "wrapper/_version.py"
+version_scheme = "post-release"
+local_scheme = "no-local-version"
 
 [project]
 name = "wrapper"
@@ -22,7 +24,7 @@ dependencies = [
     "anthropic",
     "boto3",
     "botocore",
-    "groq-sdk"
+    "groq"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
