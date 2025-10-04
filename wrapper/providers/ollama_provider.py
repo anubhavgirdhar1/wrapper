@@ -3,7 +3,7 @@ import requests
 from wrapper.base import BaseLLM
 from wrapper.utils import set_key, get_key_silent, ColorLogger
 from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
+from dotenv import load_dotenv
 import json
 from wrapper.config import *
 
@@ -13,60 +13,63 @@ class OllamaProvider(BaseLLM):
     DEFAULT_PORT = 11434  # fixed port
 
     def __init__(self):
-        dotenv_path = find_dotenv()
-        env_file = dotenv_path or Path(".env")
-        if dotenv_path:
-            load_dotenv(dotenv_path)
-            log.debug(f"Loaded .env from {dotenv_path}")
+        # Use consistent location in user's home directory
+        env_file = Path.home() / ".wrapper" / ".env"
+        env_file.parent.mkdir(exist_ok=True)
+        
+        if env_file.exists():
+            load_dotenv(env_file)
+            log.debug(f"yooo found ur .env chillin at {env_file}")
         else:
-            Path(".env").touch()
-            load_dotenv()
-            log.debug("Created new .env file and loaded it")
+            env_file.touch()
+            load_dotenv(env_file)
+            log.debug(f"no .env? bruh... made u a fresh one at {env_file}")
 
-        # siletn loader
+        # Load values
         self.api_key = (get_key_silent("OLLAMA_API_KEY") or "").strip()
         self.base_url = (get_key_silent("OLLAMA_BASE_URL") or "").strip()
-        log.debug(f"Initial API key: {'FOUND' if self.api_key else 'MISSING'}")
-        log.debug(f"Initial Base URL: {self.base_url or 'MISSING'}")
- 
-        # menu for selection
-        if not self.api_key and not self.base_url:
-            print("Ollama Configuration Menu:")
-            print("1: Provide API Key")
-            print("2: Provide Endpoint Host (port will remain 11434)")
-            print("Enter to skip.")
-            choice = input("Select option [1/2]: ").strip()
+        log.debug(f"api key status: {'secured ✓' if self.api_key else 'missing in action lmao'}")
+        log.debug(f"base url vibes: {self.base_url or 'nowhere to be found chief'}")
+        
+        # Only show menu if base_url is not already configured
+        if not self.base_url:
+            print("\nOllama Configuration (first time setup):")
+            print("1: Provide API Key (optional, for remote Ollama)")
+            print("2: Provide Endpoint Host (default: localhost:11434)")
+            print("Press Enter to use default localhost")
+            choice = input("Select option [1/2 or Enter]: ").strip()
 
             if choice == "1":
                 new_key = input("Enter Ollama API Key: ").strip()
                 if new_key:
                     set_key(str(env_file), "OLLAMA_API_KEY", new_key)
                     self.api_key = new_key
-                    print("API Key saved successfully")
-                else:
-                    print("No API key entered")
+                    log.debug("api key locked n loaded")
             elif choice == "2":
-                host = input("Enter Ollama API Endpoint Host (e.g., localhost or 127.0.0.1): ").strip()
+                host = input("Enter Ollama API Endpoint Host (e.g., localhost or 192.168.1.100): ").strip()
                 if host:
                     self.base_url = f"http://{host}:{self.DEFAULT_PORT}"
                     set_key(str(env_file), "OLLAMA_BASE_URL", self.base_url)
-                    print(f"Endpoint URL set to {self.base_url}")
-                else:
-                    log.warning("No host entered, using default later")
+                    log.debug(f"endpoint saved: {self.base_url}")
+            
+            # Set and save default if nothing was provided
+            if not self.base_url:
+                self.base_url = f"http://localhost:{self.DEFAULT_PORT}"
+                set_key(str(env_file), "OLLAMA_BASE_URL", self.base_url)
+                log.debug("saved default localhost to .env so we dont bug u again")
 
-        # defaults to local 
+        # Final fallback
         if not self.base_url:
             self.base_url = f"http://localhost:{self.DEFAULT_PORT}"
-            log.info(f"Using default endpoint: {self.base_url}")
+            log.debug(f"aight defaultin to localhost party: {self.base_url}")
 
-        # bs warnign - will remove later #TODO
-        if not self.api_key:
-            log.warning("API key is missing. Requests may fail if API key is required.")
+        log.debug("no api key but fk it we ball, might crash later idk" if not self.api_key else "we got everything, lets cook")
 
     def list_models(self, **kwargs):
         url = f"{self.base_url}/api/tags"   
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
 
+        log.debug("lemme check what models u got installed...")
         try:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
@@ -79,72 +82,104 @@ class OllamaProvider(BaseLLM):
                     mid = m.get("model", name)
                     size = m.get("size", "unknown")
                     log.info(f"  {idx:02d}. {name}  |  ID: {mid}  |  Size: {size}")
+                log.debug(f"puh, found {len(models_raw)} models total")
             else:
                 log.warning("No models found!")
                 log.info("Download one using: ollama pull <model_name>")
+                log.debug("bruh ur ollama is emptier than my brain rn")
 
         except requests.RequestException as e:
             log.error(f"Failed to retrieve models: {e}")
+            log.debug("model fetching went boom 💥")
 
-    def generate(self, prompt: str = None, stream: bool = False, **kwargs) -> str:
+    def generate(self, messages: list = None, prompt: str = None, stream: bool = False, **kwargs) -> str:
         model = kwargs.pop("model", None)
-        messages = kwargs.pop("messages", None)
 
         if not model:
-            log.error("No model specified for Ollama")
+            log.error("ayo wheres the model name at?? cant do shit without it")
             return ""
 
+        log.debug(f"cookin with model: {model} 👨‍🍳")
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
 
         # Handle messages vs prompt
         if messages:
-            # If messages list is provided, merge into a single prompt
+            log.debug(f"processin {len(messages)} messages... this better be good")
             system_msg = "\n".join(
-                m["content"] for m in messages if m["role"] == "system"
+                m["content"] for m in messages if m.get("role") == "system"
             )
             user_msg = "\n".join(
-                m["content"] for m in messages if m["role"] == "user"
+                m["content"] for m in messages if m.get("role") == "user"
             )
-            final_prompt = f"{system_msg}\n\n{user_msg}".strip()
+            
+            if system_msg and user_msg:
+                final_prompt = f"{system_msg}\n\n{user_msg}"
+                log.debug("got both system n user msgs, perfectenschlag")
+            elif user_msg:
+                final_prompt = user_msg
+                log.debug("just user msg, keepin it simple")
+            else:
+                final_prompt = system_msg or ""
+                log.debug("only system msg?? weird but ok")
+                
+        elif prompt:
+            log.debug("raw prompt mode activated ezpz")
+            final_prompt = prompt
         else:
-            # Default system + user
-            system_default = "You are a helpful AI assistant."
-            final_prompt = f"{system_default}\n\nUser: {prompt}"
+            log.error("bruh u gave me literally nothing to work with")
+            return ""
 
-        payload = {"model": model, "prompt": final_prompt, **kwargs}
+        log.debug(f"final prompt length: {len(final_prompt)} chars... sendin it")
+        payload = {"model": model, "prompt": final_prompt, "stream": False, **kwargs}
 
         try:
-            with requests.post(
+            log.debug(f"hittin up {self.base_url}/api/generate...")
+            response = requests.post(
                 f"{self.base_url}/api/generate",
                 json=payload,
                 headers=headers,
-                stream=stream
-            ) as response:
-                response.raise_for_status()
+                timeout=60
+            )
+            response.raise_for_status()
+            log.debug("puh! got 200 back, ollama didnt ghost us")
 
-                if stream:
-                    collected = []
-                    for line in response.iter_lines():
-                        if line:
-                            try:
-                                data = json.loads(line.decode("utf-8"))
-                                piece = data.get("response", "")
-                                if piece:
-                                    collected.append(piece)
-                                if data.get("done", False):
-                                    break
-                            except Exception:
-                                continue
-                    log.success("Streaming complete")
-                    return "".join(collected).strip()
-                else:
-                    data = response.json()
-                    log.success("Received full response from Ollama API")
-                    return data.get("response", data.get("text", "")).strip()
+            # Ollama returns newline-delimited JSON even with stream=false
+            collected = []
+            line_count = 0
+            for line in response.text.strip().split('\n'):
+                if line:
+                    line_count += 1
+                    try:
+                        data = json.loads(line)
+                        piece = data.get("response", "")
+                        if piece:
+                            collected.append(piece)
+                            if stream:
+                                print(piece, end="", flush=True)
+                    except json.JSONDecodeError as e:
+                        log.debug(f"line {line_count} was garbagio: {line[:40]}...")
+                        continue
+
+            log.debug(f"parsed {line_count} lines from response")
+            result = "".join(collected).strip()
+            
+            if result:
+                log.debug(f"dih! got {len(result)} chars back, looks solid")
+            else:
+                log.warning("ollama returned jack shit 😭")
+                log.debug("response was emptier than my will to live")
+                
+            return result
 
         except requests.HTTPError as e:
-            log.error(f"Ollama API error: {e.response.text}")
-            sys.exit(1)
+            log.error(f"ollama threw hands: {e.response.text if hasattr(e, 'response') else e}")
+            log.debug("http error, probably model doesnt exist or sumthin")
+            return ""
         except requests.RequestException as e:
-            log.error(f"Request failed - Please ensure Ollama is running. Details: {e}")
-            sys.exit(1)
+            log.error(f"connection ded. is ollama even alive?? {e}")
+            log.debug("cant reach ollama, did u forget to run `ollama serve` lmaoo")
+            return ""
+        except Exception as e:
+            log.error(f"something catastrophic happened: {e}")
+            log.debug("idk what broke but it broke hard 🔥")
+            return ""

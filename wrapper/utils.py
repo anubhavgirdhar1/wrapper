@@ -63,13 +63,31 @@ class ColorLogger:
         "DEBUG": "\033[95m",    
     }
 
+    ASCII_REMINDER = """
+    ╔═══════════════════════════════════════════════════════════════╗
+    ║  PSST! These debug logs annoying you?                         ║
+    ║  Go to your config.py and set:                                ║
+    ║                                                               ║
+    ║      SHOW_LOGS = False                                        ║
+    ║                                                               ║
+    ║  This will shut me up and make your terminal clean again      ║
+    ╚═══════════════════════════════════════════════════════════════╝
+    """
+
     def __init__(self, enable_debug: bool):
         self.enable_debug = enable_debug
+        self._shown_reminder = False
 
     def _log(self, message: str, level: str):
         if self.enable_debug:
             color = self.COLORS.get(level.upper(), self.COLORS["RESET"])
             print(f"{color}[{level.upper()}] {message}{self.COLORS['RESET']}")
+
+    def _show_reminder_once(self):
+        """Show the ASCII reminder only once per session"""
+        if self.enable_debug and not self._shown_reminder:
+            print(self.COLORS["WARNING"] + self.ASCII_REMINDER + self.COLORS["RESET"])
+            self._shown_reminder = True
 
     def info(self, message: str):
         if self.enable_debug:
@@ -90,3 +108,4 @@ class ColorLogger:
     def debug(self, message: str):
         if self.enable_debug:
             self._log(message, "DEBUG")
+            self._show_reminder_once() 

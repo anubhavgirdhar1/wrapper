@@ -1,38 +1,36 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "setuptools-scm"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools_scm]
-write_to = "wrapper/_version.py"
-version_scheme = "post-release"
-local_scheme = "no-local-version"
 
 [project]
 name = "wrapper"
-dynamic = ["version"]  
+version = "0.1.16"
 description = "A unified Python wrapper for calling LLMs locally or via 3rd party providers"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "Apache-2.0"}
+license = { text = "Apache-2.0" }
+
 authors = [
-  {name = "Anubhav Girdhar", email = "anubhavgirdhar18@gmail.com"}
+  { name = "Anubhav Girdhar", email = "anubhavgirdhar18@gmail.com" }
 ]
+
 dependencies = [
-    "openai",
-    "python-dotenv",
-    "requests==2.32.5",
-    "anthropic",
-    "boto3",
-    "botocore",
-    "groq"
+  "openai",
+  "python-dotenv",
+  "requests==2.32.5",
+  "anthropic",
+  "boto3",
+  "botocore",
+  "groq"
 ]
+
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache Software License",
-    "Operating System :: OS Independent",
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Topic :: Software Development :: Libraries",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries"
 ]
 
 [project.urls]
