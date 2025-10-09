@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wrapper"
-version = "0.1.16"
+version = "0.1.19.5"
 description = "A unified Python wrapper for calling LLMs locally or via 3rd party providers"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -17,7 +17,7 @@ authors = [
 dependencies = [
   "openai",
   "python-dotenv",
-  "requests==2.32.5",
+  "requests",
   "anthropic",
   "boto3",
   "botocore",
