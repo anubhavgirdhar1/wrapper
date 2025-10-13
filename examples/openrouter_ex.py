@@ -1,13 +1,10 @@
 from wrapper.core import Wrapper
 
-# Initialize OpenRouter client
-client = Wrapper("openrouter")
+openrouter_client = Wrapper("openrouter")
 
-# Generate text
-response = client.generate(
+response = openrouter_client.generate(
     model="openai/gpt-4o",
-    user="Explain quantum entanglement in simple terms.",
-    system="You are a concise and clear physics tutor."
+    user="Write a tiny poem about summer rain.",
+    system="You are a helpful assistant.",
+    stream=True
 )
-
-print("\nOpenRouter Response:\n", response)

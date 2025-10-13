@@ -1,13 +1,10 @@
 from wrapper.core import Wrapper
 
-# Initialize Gemini client
-client = Wrapper("gemini")
+gemini_client = Wrapper("gemini")
 
-# Generate text
-response = client.generate(
-    model="gemini-1.5-flash",  # or "gemini-2.0-flash" if you have access
-    user="Summarize the benefits of renewable energy.",
-    system="You are an expert in sustainable technologies."
+response = gemini_client.generate(
+    model="models/gemini-2.0-flash",
+    user="Write a tiny poem about summer rain.",
+    system="You are a helpful assistant.",
+    stream=True
 )
-
-print("\nGemini Response:\n", response)
