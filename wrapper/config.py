@@ -1,1 +1,1 @@
-SHOW_LOGS = False
+SHOW_LOGS = True
