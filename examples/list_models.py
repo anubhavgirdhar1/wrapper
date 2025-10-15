@@ -1,5 +1,3 @@
-# list_models.py
-
 from wrapper.core import Wrapper
 
 def print_models_for_provider(provider_name: str):
@@ -11,8 +9,6 @@ def print_models_for_provider(provider_name: str):
     print("-" * 50)
     
     try:
-        # The available_models_api is a static method that handles
-        # initialization and printing the formatted list.
         models = Wrapper.available_models_api(provider_name)
         
         if not models:
@@ -27,7 +23,7 @@ def print_models_for_provider(provider_name: str):
     print("\n")
 
 if __name__ == "__main__":
-    # Ensure your OPENROUTER_API_KEY and GEMINI_API_KEY are in your .env file
+    # Ensure your OPENROUTER_API_KEY or GEMINI_API_KEY or other API keys are in your .env file
     # print_models_for_provider("openrouter")
     # print_models_for_provider("gemini")
     print_models_for_provider("groq")
