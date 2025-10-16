@@ -4,6 +4,8 @@ from wrapper.providers.openai_provider import OpenAIProvider
 from wrapper.providers.ollama_provider import OllamaProvider
 from wrapper.providers.groq_provider import GroqProvider
 from wrapper.providers.bedrock_provider import BedrockProvider
+from wrapper.providers.openrouter_provider import OpenRouterProvider
+from wrapper.providers.gemini_provider import GeminiProvider
 from collections import defaultdict
 from wrapper.utils import ColorLogger
 from wrapper.config import *
@@ -26,7 +28,10 @@ class Wrapper:
             self.impl = GroqProvider(**kwargs)
         elif provider == "bedrock":
             self.impl = BedrockProvider(**kwargs)
-
+        elif provider == "openrouter":
+            self.impl = OpenRouterProvider(**kwargs)
+        elif provider == "gemini":
+            self.impl = GeminiProvider(**kwargs)
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -137,7 +142,21 @@ class Wrapper:
             for i, m in enumerate(models, 1):
                 log.info(f"   {i:2d}. {m['modelId']} — {m['modelName']} ({m['provider']})")
             return models
-        
+        elif provider == "openrouter":
+            instance = OpenRouterProvider(**kwargs)
+            models = instance.list_models() or []
+            log.info("\n OpenRouter Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"   {i:2d}. {m}")
+            return models
+
+        elif provider == "gemini":
+            instance = GeminiProvider(**kwargs)
+            models = instance.list_models() or []
+            log.info("\n Gemini Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"  {i:02d}. {m}")
+            return models
         log.warning(f"No wrapper available for provider '{provider}'.")
         return []
 

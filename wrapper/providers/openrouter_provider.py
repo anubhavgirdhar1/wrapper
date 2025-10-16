@@ -1,40 +1,28 @@
-# wrapper/providers/groq_provider.py
-from typing import List, Dict, Any, Iterator, Union
+# openrouter_provider.py
+from typing import List, Dict, Any, Iterator, Union, Optional
+import requests
+from openai import OpenAI, AuthenticationError, APIError, APITimeoutError, APIConnectionError, RateLimitError
 from wrapper.base import BaseLLM
 from wrapper.utils import get_or_request_key, ColorLogger
 from wrapper.config import *
-from groq import (
-    Groq,
-    BadRequestError,
-    AuthenticationError,
-    PermissionDeniedError,
-    NotFoundError,
-    UnprocessableEntityError,
-    RateLimitError,
-    InternalServerError,
-    APIConnectionError,
-)
 
 log = ColorLogger(enable_debug=SHOW_LOGS)
 
-class GroqProvider(BaseLLM):
+class OpenRouterProvider(BaseLLM):
     def __init__(self):
-        self.api_key = get_or_request_key("GROQ_API_KEY", "Please enter your Groq API Key")
-        self.client = Groq(api_key=self.api_key)
+        self.api_key = get_or_request_key("OPENROUTER_API_KEY", "Please enter your OpenRouter API Key")
+        self.client = OpenAI(api_key=self.api_key, base_url="https://openrouter.ai/api/v1")
         self.default_system_prompt = "You are a helpful AI assistant."
+        self.base_api_url = "https://openrouter.ai/api/v1"
 
     def generate(
         self,
         model: str,
         prompt: str = None,
         messages: List[Dict[str, Any]] = None,
-        temperature: float = 0.7,
-        max_tokens: int = 200,
-        top_p: float = 0.1,
         stream: bool = False,
         **kwargs
     ) -> Union[str, Iterator[str]]:
-
         if messages and isinstance(messages, list):
             final_messages = messages
         else:
@@ -42,20 +30,14 @@ class GroqProvider(BaseLLM):
                 {"role": "system", "content": self.default_system_prompt},
                 {"role": "user", "content": prompt or "Hello"},
             ]
-
         api_params = {
             "model": model,
             "messages": final_messages,
             "stream": stream,
-            "temperature": temperature,
-            "max_tokens": max_tokens,
-            "top_p": top_p,
+            **{k: v for k, v in kwargs.items() if v is not None}
         }
-        api_params.update({k: v for k, v in kwargs.items() if v is not None})
-
         try:
             response = self.client.chat.completions.create(**api_params)
-
             if stream:
                 def stream_generator() -> Iterator[str]:
                     for chunk in response:
@@ -63,32 +45,24 @@ class GroqProvider(BaseLLM):
                         if content:
                             yield content
                 return stream_generator()
-
             return (response.choices[0].message.content or "").strip()
-
-        except (
-            AuthenticationError,
-            PermissionDeniedError,
-            NotFoundError,
-            UnprocessableEntityError,
-            RateLimitError,
-            InternalServerError,
-            APIConnectionError,
-            BadRequestError
-        ) as e:
-            log.error(f"[groq] API error: {e.__class__.__name__} - {e}")
+        except (AuthenticationError, APIConnectionError, APITimeoutError, RateLimitError, APIError) as e:
+            log.error(f"[openrouter] API error: {e}")
             raise RuntimeError(str(e))
         except Exception as e:
-            log.error(f"[groq] Unexpected error: {e}")
+            log.error(f"[openrouter] Unexpected error: {e}")
             raise RuntimeError(str(e))
 
     def list_models(self) -> List[str]:
         try:
-            models = self.client.models.list()
-            return [m.id for m in models.data]
-        except (APIConnectionError, RateLimitError, AuthenticationError) as e:
-            log.error(f"[groq] list_models API error: {e}")
-            return []
+            r = requests.get(
+                f"{self.base_api_url}/models",
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                timeout=30,
+            )
+            r.raise_for_status()
+            data = r.json()
+            return [m["id"] for m in data.get("data", []) if m.get("id")]
         except Exception as e:
-            log.error(f"[groq] list_models unexpected error: {e}")
+            log.error(f"[openrouter] list_models error: {e}")
             return []

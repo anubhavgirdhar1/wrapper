@@ -8,3 +8,5 @@ build/
 *.egg-info/
 z.py
 *_version.py
+uv.lock
+test.py

@@ -7,7 +7,7 @@ name = "wrapper"
 version = "0.1.19.5"
 description = "A unified Python wrapper for calling LLMs locally or via 3rd party providers"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
 
 authors = [
@@ -21,7 +21,8 @@ dependencies = [
   "anthropic",
   "boto3",
   "botocore",
-  "groq"
+  "groq",
+  "google-genai"
 ]
 
 classifiers = [
