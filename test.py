@@ -67,10 +67,14 @@ if __name__ == "__main__":
     openrouter_model = "mistralai/mistral-7b-instruct-v0.1"
     gemini_model = "models/gemini-2.0-flash"
     groq_model = "openai/gpt-oss-120b"
+    xai_model= "grok-4-fast-non-reasoning"
+    mistral_model = ""
     # --- Run Tests ---
     # run_test("openrouter", openrouter_model)
     # run_test("gemini", gemini_model)
-    run_test("groq", groq_model)
+    # run_test("groq", groq_model)
+    run_test("xai", xai_model)
+    # run_test("mistral", mistral_model)
     print("-" * 50)
     print("All tests completed.")
     print("-" * 50)

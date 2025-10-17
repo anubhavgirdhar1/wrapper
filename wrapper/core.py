@@ -6,6 +6,8 @@ from wrapper.providers.groq_provider import GroqProvider
 from wrapper.providers.bedrock_provider import BedrockProvider
 from wrapper.providers.openrouter_provider import OpenRouterProvider
 from wrapper.providers.gemini_provider import GeminiProvider
+from wrapper.providers.xai_provider import XAIProvider
+from wrapper.providers.mistral_provider import MistralProvider
 from collections import defaultdict
 from wrapper.utils import ColorLogger
 from wrapper.config import *
@@ -32,6 +34,10 @@ class Wrapper:
             self.impl = OpenRouterProvider(**kwargs)
         elif provider == "gemini":
             self.impl = GeminiProvider(**kwargs)
+        elif provider == "xai":
+            self.impl = XAIProvider(**kwargs)
+        elif provider == "mistral":
+            self.impl = MistralProvider(**kwargs)
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -154,6 +160,22 @@ class Wrapper:
             instance = GeminiProvider(**kwargs)
             models = instance.list_models() or []
             log.info("\n Gemini Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"  {i:02d}. {m}")
+            return models
+        
+        elif provider == "xai":
+            instance = XAIProvider(**kwargs)
+            models = instance.list_models() or []
+            log.info("\n xAI Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"  {i:02d}. {m}")
+            return models
+        
+        elif provider == "mistral":
+            instance = MistralProvider(**kwargs)
+            models = instance.list_models() or []
+            log.info("\n Mistral Models:\n")
             for i, m in enumerate(models, 1):
                 log.info(f"  {i:02d}. {m}")
             return models
