@@ -85,15 +85,16 @@ print(response2)
 
 ## 🛠 Supported Providers
 
-| Provider | Why??                                              |
-| -------- | -------------------------------------------------- | 
-| OpenAI   | the boring dfault shi                              |                                               
-| Ollama   | local models so you can LARP on self-sovereign     | 
-| Groq     | fast as fuck                                       | 
-| Bedrock  | Amazon's way of charging you more than S3          | 
-| Anthropic| claude, polite sybau ah model.                     | 
-| Azure    | openai but enterprise daddy issues edition         | 
-
+| Provider | Why??                                                |
+| -------- | ---------------------------------------------------- | 
+| OpenAI     | the boring dfault shi                              |                                               
+| Ollama     | local models so you can LARP on self-sovereign     | 
+| Groq       | fast as fuck                                       | 
+| Bedrock    | Amazon's way of charging you more than S3          | 
+| Anthropic  | claude, polite sybau ah model.                     | 
+| Azure      | openai but enterprise daddy issues edition         | 
+| GCP        | Supporting GCP models with streaming               | 
+| OpenRouter | Openrouter support with streaming                  | 
 ---
 
 ## 💪 Contribution
