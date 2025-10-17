@@ -8,6 +8,7 @@ from wrapper.providers.openrouter_provider import OpenRouterProvider
 from wrapper.providers.gemini_provider import GeminiProvider
 from wrapper.providers.xai_provider import XAIProvider
 from wrapper.providers.mistral_provider import MistralProvider
+from wrapper.providers.huggingface_provider import HuggingFaceProvider
 from collections import defaultdict
 from wrapper.utils import ColorLogger
 from wrapper.config import *
@@ -38,6 +39,8 @@ class Wrapper:
             self.impl = XAIProvider(**kwargs)
         elif provider == "mistral":
             self.impl = MistralProvider(**kwargs)
+        elif provider == "huggingface":
+            self.impl = HuggingFaceProvider(**kwargs)
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -176,6 +179,13 @@ class Wrapper:
             instance = MistralProvider(**kwargs)
             models = instance.list_models() or []
             log.info("\n Mistral Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"  {i:02d}. {m}")
+            return models
+        elif provider == "huggingface":
+            instance = HuggingFaceProvider(**kwargs)
+            models = instance.list_models() or []
+            log.info("\n Hugging Face Models:\n")
             for i, m in enumerate(models, 1):
                 log.info(f"  {i:02d}. {m}")
             return models
