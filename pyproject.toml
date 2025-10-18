@@ -23,7 +23,7 @@ dependencies = [
   "botocore",
   "groq",
   "google-genai",
-  "mistralai>=1.9.11",
+  "mistralai",
 ]
 
 classifiers = [
