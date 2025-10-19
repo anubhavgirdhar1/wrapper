@@ -41,6 +41,11 @@ AWS_ACCESS_KEY_ID=xxxx
 AWS_SECRET_ACCESS_KEY=xxxx
 AWS_REGION=us-east-1
 ANTHROPIC_API_KEY=claude-knows-too-much
+GEMINI_API_KEY=your-gemini-api-key
+OPENROUTER_API_KEY=your-openrouter-api-key
+XAI_API_KEY=your-xai-api-key
+MISTRAL_API_KEY=your-mistral-api-key
+HUGGINGFACE_API_KEY=your-huggingface-api-key
 ```
 
 you can ignore this too, wrapper will ask you for it, don't be a dih, none is free.
@@ -85,16 +90,20 @@ print(response2)
 
 ## 🛠 Supported Providers
 
-| Provider | Why??                                                |
-| -------- | ---------------------------------------------------- | 
-| OpenAI     | the boring dfault shi                              |                                               
-| Ollama     | local models so you can LARP on self-sovereign     | 
-| Groq       | fast as fuck                                       | 
-| Bedrock    | Amazon's way of charging you more than S3          | 
-| Anthropic  | claude, polite sybau ah model.                     | 
-| Azure      | openai but enterprise daddy issues edition         | 
-| GCP        | Supporting GCP models with streaming               | 
-| OpenRouter | Openrouter support with streaming                  | 
+| Provider    | Why??                                                               |
+|-------------|---------------------------------------------------------------------|
+| OpenAI      | the boring dfault shi                                               |
+| Ollama      | local models so you can LARP on self-sovereign                      |
+| Groq        | fast as fuck                                                        |
+| Bedrock     | Amazon's way of charging you more than S3                           |
+| Anthropic   | claude, polite sybau ah model.                                      |
+| Azure       | openai but enterprise daddy issues edition                          |
+| Mistral     | High-performance open-source language models                        |
+| HuggingFace | Access to thousands of community models                             |
+| xAI         | Advanced AI models from the Elon Musk                               |
+| Gemini      | Google's multimodal AI capabilities                                 |
+| OpenRouter  | Openrouter support with streaming                                   |
+
 ---
 
 ## 💪 Contribution
