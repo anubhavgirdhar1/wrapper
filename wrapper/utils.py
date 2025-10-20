@@ -1,7 +1,10 @@
 import os
 import sys
+import time
 from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
+from functools import wraps
+from typing import Callable, Any, Type, Tuple
 
 def set_key(env_file: str, key: str, value: str):
     env_path = Path(env_file)
@@ -52,6 +55,78 @@ def get_key_silent(env_var_name: str):
     if dotenv_path:
         load_dotenv(dotenv_path)
     return os.getenv(env_var_name)
+
+
+def with_retry(
+    max_retries: int = 3,
+    initial_delay: float = 1.0,
+    backoff_factor: float = 2.0,
+    retriable_exceptions: Tuple[Type[Exception], ...] = (Exception,),
+    logger: 'ColorLogger' = None
+):
+    """
+    Decorator to add retry logic with exponential backoff to any function.
+    
+    Args:
+        max_retries: Maximum number of retry attempts (default: 3)
+        initial_delay: Initial delay between retries in seconds (default: 1.0)
+        backoff_factor: Multiplier for delay after each retry (default: 2.0)
+        retriable_exceptions: Tuple of exception types that should trigger retry
+        logger: Optional ColorLogger instance for logging retry attempts
+        
+    Returns:
+        Decorated function with retry logic
+        
+    Example:
+        @with_retry(max_retries=3, initial_delay=1.0, backoff_factor=2.0)
+        def call_api():
+            # API call that might fail
+            pass
+    """
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        def wrapper(*args, **kwargs) -> Any:
+            delay = initial_delay
+            last_exception = None
+            
+            for attempt in range(max_retries + 1):
+                try:
+                    return func(*args, **kwargs)
+                    
+                except retriable_exceptions as e:
+                    last_exception = e
+                    
+                    # Don't retry on last attempt
+                    if attempt >= max_retries:
+                        if logger:
+                            logger.error(f"[retry] Max retries ({max_retries}) exceeded for {func.__name__}")
+                        raise
+                    
+                    # Log retry attempt
+                    if logger:
+                        logger.warning(
+                            f"[retry] Attempt {attempt + 1}/{max_retries + 1} failed for {func.__name__}: "
+                            f"{type(e).__name__} - {str(e)[:100]}"
+                        )
+                        logger.info(f"[retry] Retrying in {delay:.1f} seconds...")
+                    
+                    # Wait before retrying
+                    time.sleep(delay)
+                    delay *= backoff_factor
+                    
+                except Exception as e:
+                    # Non-retriable exception, raise immediately
+                    if logger:
+                        logger.error(f"[retry] Non-retriable exception in {func.__name__}: {type(e).__name__}")
+                    raise
+            
+            # Should never reach here, but just in case
+            if last_exception:
+                raise last_exception
+                
+        return wrapper
+    return decorator
+
 
 class ColorLogger:
     COLORS = {
