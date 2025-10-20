@@ -24,6 +24,7 @@ dependencies = [
   "groq",
   "google-genai",
   "mistralai",
+  "google-cloud-aiplatform",
 ]
 
 classifiers = [
