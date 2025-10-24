@@ -46,6 +46,7 @@ OPENROUTER_API_KEY=your-openrouter-api-key
 XAI_API_KEY=your-xai-api-key
 MISTRAL_API_KEY=your-mistral-api-key
 HUGGINGFACE_API_KEY=your-huggingface-api-key
+GCP_PROJECT_ID=your-gcp-project-id
 ```
 
 you can ignore this too, wrapper will ask you for it, don't be a dih, none is free.
@@ -103,6 +104,7 @@ print(response2)
 | xAI         | Advanced AI models from the Elon Musk                               |
 | Gemini      | Google's multimodal AI capabilities                                 |
 | OpenRouter  | Openrouter support with streaming                                   |
+| GCP (Vertex AI) | Google Cloud's enterprise AI platform with Gemini models        |
 
 ---
 

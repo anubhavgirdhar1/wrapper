@@ -9,6 +9,7 @@ from wrapper.providers.gemini_provider import GeminiProvider
 from wrapper.providers.xai_provider import XAIProvider
 from wrapper.providers.mistral_provider import MistralProvider
 from wrapper.providers.huggingface_provider import HuggingFaceProvider
+from wrapper.providers.gcp_provider import GCPProvider
 from collections import defaultdict
 from wrapper.utils import ColorLogger
 from wrapper.config import *
@@ -41,6 +42,8 @@ class Wrapper:
             self.impl = MistralProvider(**kwargs)
         elif provider == "huggingface":
             self.impl = HuggingFaceProvider(**kwargs)
+        elif provider == "gcp" or provider == "vertex" or provider == "vertexai":
+            self.impl = GCPProvider(**kwargs)
         else:
             raise ValueError(f"Provider {provider} not supported yet")
         
@@ -189,6 +192,15 @@ class Wrapper:
             for i, m in enumerate(models, 1):
                 log.info(f"  {i:02d}. {m}")
             return models
+        
+        elif provider == "gcp" or provider == "vertex" or provider == "vertexai":
+            instance = GCPProvider(**kwargs)
+            models = instance.list_models() or []
+            log.info("\n GCP Vertex AI Models:\n")
+            for i, m in enumerate(models, 1):
+                log.info(f"  {i:02d}. {m}")
+            return models
+        
         log.warning(f"No wrapper available for provider '{provider}'.")
         return []
 
