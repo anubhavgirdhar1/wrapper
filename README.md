@@ -85,7 +85,7 @@ print(response2)
 * **Streaming Support**: Stream responses when available.
 * **Custom Prompts**: Custom param support for crazy shi you might wanna pull
 * **Environment Management**: Automatically handle API keys via `.env`.
-* **Debug Logging**: Toggle debug output via `SHOW_LOGS` in `config.py`. (This a custom logger, try ts out)
+* **Debug Logging**: Toggle debug output via `SHOW_LOGS` in `config.py`. (This a custom logger, only use this)
 
 ---
 
