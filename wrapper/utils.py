@@ -5,6 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
 from functools import wraps
 from typing import Callable, Any, Type, Tuple
+from wrapper.config import MEMORY, MEMORY_TYPE
 
 def set_key(env_file: str, key: str, value: str):
     env_path = Path(env_file)
@@ -26,6 +27,19 @@ def set_key(env_file: str, key: str, value: str):
     with env_path.open("w") as f:
         f.writelines(lines)
 
+# This would create memory basis the user id
+def create_memory(user_id: str, MEMORY_TYPE: str, MEMORY: str):
+    if MEMORY == True:
+        if MEMORY_TYPE == "local":
+            return
+    return
+
+# This function would update the memory
+def update_memory(user_id: str, user_input: str, llm_response: str):
+    if user_id.memory == "exists":
+        if MEMORY_TYPE == "local":
+            return
+    return
 
 def get_or_request_key(env_var_name: str, prompt_message: str) -> str:
     """Fetch key from env, prompt if missing."""
