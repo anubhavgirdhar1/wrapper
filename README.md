@@ -29,7 +29,7 @@ pip install -e .
 ```
 
 ---
-## .env setup (don’t be that guy who pastes keys into code)
+## .env setup 
 
 Make a .env file. Throw your keys in it. Done.
 
